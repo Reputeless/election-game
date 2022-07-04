@@ -259,8 +259,6 @@ void Main() {
 	// 初期値を設定
 	Initialize();
 
-	bool tweeted = false;
-
 	while (System::Update()) {
 
 	# if SIV3D_PLATFORM(WEB)
@@ -1114,12 +1112,11 @@ void Main() {
 			if (MouseState != 0) ButtonA[15] = max(0.0, ButtonA[15] - 5.0 * Scene::DeltaTime());
 
 			// クリックの状態
-			if (!tweeted && Scene::Time() - GetLastClick >= 0.1 && MouseL.down() && WaitTime >= 0.0) {
+			if (Scene::Time() - GetLastClick >= 0.1 && MouseL.down() && WaitTime >= 0.0) {
 				GetLastClick = Scene::Time();
 				if (MouseState == 0) {
 					if (DisVote1 >= DisVote2) Twitter::OpenTweetWindow(U"難易度「{}」の選挙が行われ、{} 票対 {} 票で勝利しました！ #election_game"_fmt(Level, ThousandsSeparate(DisVote1), ThousandsSeparate(DisVote2)));
 					else Twitter::OpenTweetWindow(U"難易度「{}」の選挙が行われ、{} 票対 {} 票で敗北しました… #election_game"_fmt(Level, ThousandsSeparate(DisVote1), ThousandsSeparate(DisVote2)));
-					tweeted = true;
 				}
 			}
 		}
