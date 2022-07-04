@@ -259,6 +259,8 @@ void Main() {
 	// 初期値を設定
 	Initialize();
 
+	bool tweeted = false;
+
 	while (System::Update()) {
 
 	# if SIV3D_PLATFORM(WEB)
@@ -287,7 +289,11 @@ void Main() {
 			font(U"難しい").draw(20, 455, 335, ColorF(0.0, 0.0, 0.0)); font(U"相手が現職").draw(20, 437, 370, ColorF(0.0, 0.0, 0.0));
 			font(U"とても難しい").draw(20, 595, 335, ColorF(0.0, 0.0, 0.0)); font(U"相手が10選").draw(20, 603, 370, ColorF(0.0, 0.0, 0.0));
 			font(U"クリックしてレベルを選択").draw(30, 220, 500, ColorF(1.0, 1.0, 1.0, Periodic::Sine0_1(1.5s)));
-			font(U"※詳しいルールは https://github.com/E869120/election-game 参照").draw(10, 390, 570, ColorF(1.0, 1.0, 1.0));
+			const RectF urlArea = font(U"※詳しいルールは https://github.com/E869120/election-game 参照").draw(10, 390, 570, ColorF(1.0, 1.0, 1.0));
+			if (urlArea.mouseOver()){
+				Cursor::RequestStyle(CursorStyle::Hand);
+				if (MouseL.down()) System::LaunchBrowser(U"https://github.com/E869120/election-game");
+			}
 
 			// マウスの状態
 			int MouseState = -1;
@@ -1108,11 +1114,12 @@ void Main() {
 			if (MouseState != 0) ButtonA[15] = max(0.0, ButtonA[15] - 5.0 * Scene::DeltaTime());
 
 			// クリックの状態
-			if (Scene::Time() - GetLastClick >= 0.1 && MouseL.down() && WaitTime >= 0.0) {
+			if (!tweeted && Scene::Time() - GetLastClick >= 0.1 && MouseL.down() && WaitTime >= 0.0) {
 				GetLastClick = Scene::Time();
 				if (MouseState == 0) {
 					if (DisVote1 >= DisVote2) Twitter::OpenTweetWindow(U"難易度「{}」の選挙が行われ、{} 票対 {} 票で勝利しました！ #election_game"_fmt(Level, DisVote1, DisVote2));
 					else Twitter::OpenTweetWindow(U"難易度「{}」の選挙が行われ、{} 票対 {} 票で敗北しました… #election_game"_fmt(Level, DisVote1, DisVote2));
+					tweeted = true;
 				}
 			}
 		}
