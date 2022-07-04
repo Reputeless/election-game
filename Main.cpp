@@ -74,10 +74,9 @@ bool AllZero() {
 
 int AI_Choice() {
 	int Days = (Turn + 2) / 3 - 1, NextChoice = 5;
-	if (Z2.Kaban >= 350) {
-		NextChoice = 3;
-	}
-	else if (Turn == 42) {
+
+	// 14 日目の場合
+	if (Turn == 42) {
 		if (Z2.Kaban < 20) NextChoice = 2;
 		else NextChoice = 0;
 	}
@@ -85,6 +84,16 @@ int AI_Choice() {
 		if (Z2.Kaban < Z2.NumSpc * 20) NextChoice = 2;
 		else NextChoice = 0;
 	}
+
+	// 金額が 350 万円を超えた場合
+	else if (Z2.Kaban >= 350) {
+		int v1 = (Z2.NumSpc + 0) * (43 - Turn); // 設備を買わない場合
+		int v2 = (Z2.NumSpc + 1) * (42 - Turn); // 設備を買う場合
+		if (v1 < v2) NextChoice = 3;
+		else NextChoice = 0;
+	}
+
+	// その他
 	else {
 		while (true) {
 			double ret = Randouble();
@@ -93,7 +102,9 @@ int AI_Choice() {
 				ret -= probAI[i][Days];
 			}
 			if (NextChoice == 0 && Z2.Kaban < Z2.NumSpc * 20) continue;
+			if (NextChoice == 1 && Z2.Speech > 0.8 * (43 - Turn)) continue;
 			if (NextChoice == 3 && Z2.Kaban < 350) continue;
+			if (NextChoice == 4 && Z2.Jiban > 280) continue;
 			if (NextChoice == 0 && Days >= 10 && Days <= 12 && Z2.NumSpc == 1) continue;
 			break;
 		}
