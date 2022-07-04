@@ -17,6 +17,7 @@ int Life = 0;
 int Card = 0, CardID = -1;
 
 // ゲームの状況
+String Level;
 bool Hajimete = true;
 bool HajimeteEnzetsu = true;
 bool Choice[5][9];
@@ -286,6 +287,7 @@ void Main() {
 			font(U"難しい").draw(20, 455, 335, ColorF(0.0, 0.0, 0.0)); font(U"相手が現職").draw(20, 437, 370, ColorF(0.0, 0.0, 0.0));
 			font(U"とても難しい").draw(20, 595, 335, ColorF(0.0, 0.0, 0.0)); font(U"相手が10選").draw(20, 603, 370, ColorF(0.0, 0.0, 0.0));
 			font(U"クリックしてレベルを選択").draw(30, 220, 500, ColorF(1.0, 1.0, 1.0, Periodic::Sine0_1(1.5s)));
+			font(U"※詳しいルールは https://github.com/E869120/election-game 参照").draw(10, 390, 570, ColorF(1.0, 1.0, 1.0));
 
 			// マウスの状態
 			int MouseState = -1;
@@ -301,10 +303,10 @@ void Main() {
 			// キーが押された場合
 			if (Scene::Time() - GetLastClick >= 0.1 && MouseL.down() && WaitTime >= 1.2) {
 				GetLastClick = Scene::Time();
-				if (MouseState == 0) { Z1.Jiban = 100; Z2.Jiban = 40; }
-				if (MouseState == 1) { Z1.Jiban = 40; Z2.Jiban = 40; }
-				if (MouseState == 2) { Z1.Jiban = 40; Z2.Jiban = 100; }
-				if (MouseState == 3) { Z1.Jiban = 40; Z2.Jiban = 100; Z2.Kanban = 8; }
+				if (MouseState == 0) { Level = U"簡単"; Z1.Jiban = 100; Z2.Jiban = 40; }
+				if (MouseState == 1) { Level = U"普通"; Z1.Jiban = 40; Z2.Jiban = 40; }
+				if (MouseState == 2) { Level = U"難しい"; Z1.Jiban = 40; Z2.Jiban = 100; }
+				if (MouseState == 3) { Level = U"とても難しい"; Z1.Jiban = 40; Z2.Jiban = 100; Z2.Kanban = 8; }
 				if (MouseState != -1) { WaitTime = 0.0; Situation = 1; }
 			}
 		}
@@ -420,19 +422,18 @@ void Main() {
 
 			// 凡例
 			font(U"▼：若者の多い地区").draw(15, 570, 180, ColorF(0.20, 0.20, 0.20));
-			Rect(570, 210, 20, 20).draw(ColorF(0.25, 0.25, 0.55));
-			Rect(593, 210, 20, 20).draw(ColorF(0.41, 0.41, 0.63));
-			Rect(616, 210, 20, 20).draw(ColorF(0.57, 0.57, 0.71));
-			Rect(639, 210, 20, 20).draw(ColorF(0.85, 0.85, 0.85));
-			Rect(662, 210, 20, 20).draw(ColorF(0.92, 0.50, 0.71));
-			Rect(685, 210, 20, 20).draw(ColorF(0.96, 0.30, 0.63));
-			Rect(708, 210, 20, 20).draw(ColorF(1.00, 0.10, 0.55));
-			font(U"AI").draw(15, 570, 230, ColorF(0.25, 0.25, 0.55));
-			font(U"+30").draw(15, 570, 246, ColorF(0.25, 0.25, 0.55));
-			font(U"あなた").draw(15, 685, 230, ColorF(1.00, 0.10, 0.55));
-			font(U"+30").draw(15, 699, 246, ColorF(1.00, 0.10, 0.55));
-			font(U"評価値").draw(15, 628, 230, ColorF(0.50, 0.50, 0.50));
-			font(U"※評価値の付け方は GitHub 参照").draw(10, 598, 270, ColorF(0.50, 0.50, 0.50));
+			Rect(570, 215, 20, 20).draw(ColorF(0.25, 0.25, 0.55));
+			Rect(593, 215, 20, 20).draw(ColorF(0.41, 0.41, 0.63));
+			Rect(616, 215, 20, 20).draw(ColorF(0.57, 0.57, 0.71));
+			Rect(639, 215, 20, 20).draw(ColorF(0.85, 0.85, 0.85));
+			Rect(662, 215, 20, 20).draw(ColorF(0.92, 0.50, 0.71));
+			Rect(685, 215, 20, 20).draw(ColorF(0.96, 0.30, 0.63));
+			Rect(708, 215, 20, 20).draw(ColorF(1.00, 0.10, 0.55));
+			font(U"AI").draw(15, 570, 235, ColorF(0.25, 0.25, 0.55));
+			font(U"+30").draw(15, 570, 251, ColorF(0.25, 0.25, 0.55));
+			font(U"あなた").draw(15, 685, 235, ColorF(1.00, 0.10, 0.55));
+			font(U"+30").draw(15, 699, 251, ColorF(1.00, 0.10, 0.55));
+			font(U"評価値").draw(15, 628, 235, ColorF(0.50, 0.50, 0.50));
 			/*font20(U"凡例").draw(560, 166, ColorF(1.00, 1.00, 1.00));
 			font15(U"▼：若者の多い地区").draw(570, 205, ColorF(0.20, 0.20, 0.20));
 			Rect(570, 235, 20, 20).draw(ColorF(0.25, 0.25, 0.55));
@@ -1097,8 +1098,8 @@ void Main() {
 			font(U"日目時点での形勢").draw(20, 440 + 20 * to_string(Amari).size(), 170, ColorF(0.2, 0.2, 0.2));
 
 			// 終了ボタン
-			Rect(650, 20, 130, 60).draw(ColorF(1.0, 0.5, 0.5, 0.5 + 0.5 * ButtonA[15]));
-			font(U"終了").draw(30, 685, 30, ColorF(0.0, 0.0, 0.0));
+			Rect(630, 20, 150, 60).draw(ColorF(1.0, 0.5, 0.5, 0.5 + 0.5 * ButtonA[15]));
+			font(U"ツイート").draw(30, 645, 30, ColorF(0.0, 0.0, 0.0));
 
 			// マウス判定
 			int MouseState = -1;
@@ -1109,7 +1110,10 @@ void Main() {
 			// クリックの状態
 			if (Scene::Time() - GetLastClick >= 0.1 && MouseL.down() && WaitTime >= 0.0) {
 				GetLastClick = Scene::Time();
-				if (MouseState == 0) { break; }
+				if (MouseState == 0) {
+					if (DisVote1 >= DisVote2) Twitter::OpenTweetWindow(U"難易度「{}」の選挙が行われ、{} 票対 {} 票で勝利しました！ #election_game"_fmt(Level, DisVote1, DisVote2));
+					else Twitter::OpenTweetWindow(U"難易度「{}」の選挙が行われ、{} 票対 {} 票で敗北しました… #election_game"_fmt(Level, DisVote1, DisVote2));
+				}
 			}
 		}
 	}
