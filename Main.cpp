@@ -1126,8 +1126,8 @@ void Main() {
 			if (Scene::Time() - GetLastClick >= 0.1 && MouseL.down() && WaitTime >= 0.0) {
 				GetLastClick = Scene::Time();
 				if (MouseState == 0) {
-					if (DisVote1 >= DisVote2) Twitter::OpenTweetWindow(U"難易度「{}」の選挙が行われ、{} 票対 {} 票で勝利しました！ #election_game"_fmt(Level, ThousandsSeparate(DisVote1), ThousandsSeparate(DisVote2)));
-					else Twitter::OpenTweetWindow(U"難易度「{}」の選挙が行われ、{} 票対 {} 票で敗北しました… #election_game"_fmt(Level, ThousandsSeparate(DisVote1), ThousandsSeparate(DisVote2)));
+					if (DisVote1 >= DisVote2) Twitter::OpenTweetWindow(U"難易度「{}」の選挙が行われ、{} 票対 {} 票で勝利しました！\n#election_game\nhttps://e869120.github.io/election-game/index.html"_fmt(Level, ThousandsSeparate(DisVote1), ThousandsSeparate(DisVote2)));
+					else Twitter::OpenTweetWindow(U"難易度「{}」の選挙が行われ、{} 票対 {} 票で敗北しました…\n#election_game\nhttps://e869120.github.io/election-game/index.html"_fmt(Level, ThousandsSeparate(DisVote1), ThousandsSeparate(DisVote2)));
 				}
 			}
 		}
